@@ -2,6 +2,8 @@ package user;
 
 import java.util.Scanner;
 
+import admin.AdminBoard;
+import admin.AdminBook;
 import admin.AdminUser;
 
 public class MemberMain {
@@ -30,17 +32,20 @@ public class MemberMain {
 			
 			// 사용자에게 번호 입력받음
 
-			// 도서 검색 및 대출
+			// 도서 검색 및 대여
 			if (num.equals("1")) {
-				//해당 연결 클래스
+				MemberBook book = new MemberBook();
+				book.bookMenu();
 			}
 			// 문의게시판
 			else if (num.equals("2")) {
-				//해당 연결 클래스
+				MemberBoard board = new MemberBoard();
+				board.boardMenu();
 			}
 			// 마이페이지
 			else if (num.equals("3")) {
-				//해당 연결 클래스
+				MemberPage page = new MemberPage();
+				page.pageMenu();
 			}
 			// 뒤로 가기
 			else if (num.equals("0")) {

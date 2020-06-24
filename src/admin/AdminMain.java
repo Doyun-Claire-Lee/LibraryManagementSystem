@@ -31,15 +31,18 @@ public class AdminMain {
 
 			// 도서 관리
 			if (num.equals("1")) {
-				//해당 연결 클래스
+				AdminBook book = new AdminBook();
+				book.bookMenu();
 			}
 			// 회원 관리
 			else if (num.equals("2")) {
-				//해당 연결 클래스
+				AdminMember member = new AdminMember();
+				member.memberMenu();
 			}
 			// 문의게시판 관리
 			else if (num.equals("3")) {
-				//해당 연결 클래스
+				AdminBoard board = new AdminBoard();
+				board.boardMenu();
 			}
 			// 뒤로 가기
 			else if (num.equals("0")) {

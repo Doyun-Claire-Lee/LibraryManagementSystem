@@ -70,7 +70,7 @@ create or replace procedure procsetsuggestion(
 )
 is
 begin
-    insert into tblsuggestions(seq,member_seq,title,sug_contents,regdate)  values((select max(seq)+1 from tblsuggestions),pseq,ptitle,pcontents,sysdate);
+    insert into tblsuggestions(seq,member_seq,title,sug_contents,regdate,delete_sug)  values((select max(seq)+1 from tblsuggestions),pseq,ptitle,pcontents,sysdate,0);
 end;
 
 -- 6. 게시글 삭제하기
@@ -91,10 +91,10 @@ create or replace procedure procsetsuggestionupdate(
 )
 is
 begin
-update tblsuggestions set title=(case when ptitle=0 then title else ptitle end), sug_contents=(case when pcontents=0 then sug_contents else pcontents end), regdate=sysdate where seq=pseq;
+    update tblsuggestions set title=(case when ptitle is null then title else ptitle end), sug_contents=(case when pcontents is null then sug_contents else pcontents end), regdate=sysdate where seq=pseq;
 end;
 
--- 7.(3과 연계) 건의사항에 답변 작성하기(답변 시간이 안나오네...)
+-- 8.(3과 연계) 건의사항에 답변 작성하기
 
 create or replace procedure procsetsuggestionanswer(
     pseq number,

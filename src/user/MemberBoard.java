@@ -16,7 +16,7 @@ public class MemberBoard {
 			System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 			System.out.println("\t\t\t1. 문의글 작성"); 
 			System.out.println("\t\t\t2. 문의글 수정 및 삭제"); 
-			System.out.println("\t\t\t3. 문의글 답변 조회"); 
+			System.out.println("\t\t\t3. 문의글 답변 조회");
 			System.out.println("\t\t\t0. 뒤로가기");
 			System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 			System.out.print("\t\t\t▷입력: ");

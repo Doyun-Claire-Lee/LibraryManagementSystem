@@ -5,7 +5,9 @@ import java.util.Scanner;
 public class MemberBoard {
 	//회원 - 문의게시판
 	
-	public void boardMenu() {
+	public void boardMenu(MemberUser memberUser) {
+		
+		MemberUser user = memberUser;
 		
 		while (true) {
 			

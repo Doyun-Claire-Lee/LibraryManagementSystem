@@ -32,17 +32,17 @@ public class AdminMain {
 			// 도서 관리
 			if (num.equals("1")) {
 				AdminBook book = new AdminBook();
-				book.bookMenu();
+				book.bookMenu(adminUser);
 			}
 			// 회원 관리
 			else if (num.equals("2")) {
 				AdminMember member = new AdminMember();
-				member.memberMenu();
+				member.memberMenu(adminUser);
 			}
 			// 문의게시판 관리
 			else if (num.equals("3")) {
 				AdminBoard board = new AdminBoard();
-				board.boardMenu();
+				board.boardMenu(adminUser);
 			}
 			// 뒤로 가기
 			else if (num.equals("0")) {

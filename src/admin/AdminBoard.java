@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class AdminBoard {
 	//관리자 - 문의게시판 관리
 	
-	public void boardMenu() {
+	public void boardMenu(AdminUser adminUser) {
 		
 		while (true) {
 			

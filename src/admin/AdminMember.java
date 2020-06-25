@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class AdminMember {
 	//관리자 - 회원 관리
 	
-	public void memberMenu() {
+	public void memberMenu(AdminUser adminUser) {
 		
 		while (true) {
 			

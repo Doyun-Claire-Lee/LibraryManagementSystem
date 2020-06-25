@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class MemberPage {
 	//회원 - 문의게시판
 	
-	public void pageMenu() {
+	public void pageMenu(MemberUser memberUser) {
 		
 		while (true) {
 			

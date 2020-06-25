@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class AdminBook {
 	//관리자 - 도서 관리
 	
-	public void bookMenu() {
+	public void bookMenu(AdminUser adminUser) {
 		
 		while (true) {
 			

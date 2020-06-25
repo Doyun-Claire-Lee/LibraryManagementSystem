@@ -35,17 +35,17 @@ public class MemberMain {
 			// 도서 검색 및 대여
 			if (num.equals("1")) {
 				MemberBook book = new MemberBook();
-				book.bookMenu(user);
+				book.bookMenu();
 			}
 			// 문의게시판
 			else if (num.equals("2")) {
 				MemberBoard board = new MemberBoard();
-				board.boardMenu(user);
+				board.boardMenu();
 			}
 			// 마이페이지
 			else if (num.equals("3")) {
 				MemberPage page = new MemberPage();
-				page.pageMenu(user);
+				page.pageMenu();
 			}
 			// 뒤로 가기
 			else if (num.equals("0")) {

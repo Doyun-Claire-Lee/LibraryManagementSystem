@@ -5,9 +5,7 @@ import java.util.Scanner;
 public class MemberPage {
 	//회원 - 문의게시판
 	
-	public void pageMenu(MemberUser memberUser) {
-
-		MemberUser user = memberUser;
+	public void pageMenu() {
 		
 		while (true) {
 			
@@ -20,7 +18,6 @@ public class MemberPage {
 			System.out.println("\t\t\t2. 연체 내역 조회"); 
 			System.out.println("\t\t\t3. 연체 규정 조회"); 
 			System.out.println("\t\t\t4. 회원정보 수정"); 
-			System.out.println("\t\t\t5. 회원 탈퇴"); 
 			System.out.println("\t\t\t0. 뒤로가기");
 			System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 			System.out.print("\t\t\t▷입력: ");
@@ -44,10 +41,6 @@ public class MemberPage {
 			}
 			// 회원정보 수정
 			else if (num.equals("4")) {
-				
-			}
-			// 회원 탈퇴
-			else if (num.equals("5")) {
 				
 			}
 			// 뒤로 가기

@@ -5,9 +5,7 @@ import java.util.Scanner;
 public class MemberBook {
 	//회원 - 도서 검색 및 대여
 	
-	public void bookMenu(MemberUser memberUser) {
-
-		MemberUser user = memberUser;
+	public void bookMenu() {
 		
 		while (true) {
 			

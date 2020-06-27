@@ -1,6 +1,4 @@
 package jschoi;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -58,7 +56,7 @@ public class Method {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println("데이터를 가져오는데 실패했습니다.");
+			System.out.println("\t\t\t데이터를 가져오는데 실패했습니다.");
 		}
 		
 		return row;
@@ -103,12 +101,64 @@ public class Method {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println("데이터를 가져오는데 실패했습니다.");
+			System.out.println("\t\t\t데이터를 가져오는데 실패했습니다.");
 		}
 		
 		return row;
 	}//procgetSuggestions(int member_seq)
 	
+	/**
+	 * 글번호를 받아서 자신의 건의사항 내용 확인합니다.
+	 * @param psug_seq 글번호
+	 * @return ArrayList<String[]> [0]글번호 [1]제목 [2]이름 [3]날짜 [4]건의사항 [5]답변 [6]전화번호
+	 */
+	public ArrayList<String[]> procGetSuggestionsInfo(){//3. 글번호를 받아서 건의사항 내용 확인하기
+		Connection conn = null;
+		CallableStatement stat = null;
+		DBUtil util = new DBUtil();
+		ResultSet rs = null;
+		ArrayList<String[]> row = new ArrayList<String[]>();
+		while (true) {
+			int psug_seq = seqCheck();// 글번호 입력받기
+			ArrayList<String> allSeq = hasSeq(procGetSuggestions(true));
+			if (allSeq.contains(psug_seq+"")) {
+				try {
+					String sql = "{call procgetsuggestionsbysug_seq(?,?)}";
+					conn = util.open();
+					stat = conn.prepareCall(sql);
+					stat.registerOutParameter(1, OracleTypes.CURSOR);
+					stat.setInt(2, (psug_seq));
+					stat.executeQuery();
+
+					rs = (ResultSet) stat.getObject(1);
+					while (rs.next()) {
+						
+						String[] str = { rs.getString("글번호")
+								, rs.getString("제목")
+								, rs.getString("이름")
+								, rs.getString("날짜")
+								, rs.getString("건의사항").replace(".", ".\r\n\t\t\t")
+								, rs.getString("답변")==null?"답변이 아직 등록되지 않았습니다.":rs.getString("답변").replace(".", ".\r\n\t\t\t")
+								, rs.getString("전화번호") };
+						row.add(str);
+					}
+
+					stat.close();
+					conn.close();
+					return row;
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					System.out.println("\t\t\t데이터를 가져오는데 실패했습니다.");
+				}
+
+				return row;
+			} else {
+				System.out.println("\t\t\t없는 글 번호입니다");
+				
+			}
+		}
+	}//procGetSuggestionsInfo(int psug_seq)
 	/**
 	 * 키워드를 입력받아 제목과 건의사항 내용에서 일치하는 키워드를 가진 정보를 돌려줍니다.
 	 * @param keyWord 제목과 건의사항 내용에서 검색하고자 하는 키워드입니다.
@@ -147,24 +197,23 @@ public class Method {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			System.out.println("데이터를 가져오는데 실패했습니다.");
+			System.out.println("\t\t\t데이터를 가져오는데 실패했습니다.");
 		}
 		
 		return row;
 	}//procgetSuggestions(String keyWord)
 	/**
-	 * 
-	 * @return
-	 * @throws Exception
+	 * 새로운 건의사항을 작성합니다.
+	 * @param member_seq
+	 * @return true 성공, false 실패
 	 */
-	public boolean procSetSuggestion()  {
+	public boolean procSetSuggestion(int member_seq)  {//5.건의사항 작성하기
 		
 		Connection conn = null;
 		CallableStatement stat = null;
 		DBUtil util = new DBUtil();
-		System.out.print("회원번호");//삭제
-		int pmember_seq=scan.nextInt();//로그인 정보에서 회원번호를 가져온다.
-		scan.nextLine();
+		
+		int pmember_seq=member_seq;
 		
 		String ptitle="";
 		String pcontents="";
@@ -197,14 +246,14 @@ public class Method {
 	private String checkTitle()  {
 		String ptitle="";
 		while(true) {//제목 유효성 검사 100byte 이하
-			System.out.print("제목 입력: ");
+			System.out.print("\t\t\t제목 입력: ");
 			ptitle=scan.nextLine();
 			
 			if(ptitle.getBytes().length<100) {
 				break;
 			}else{
-				System.out.println("제목 길이 초과입니다.");
-				System.out.printf("제한 : 100byte, 입력 : %dbyte\n",ptitle.getBytes().length);
+				System.out.println("\t\t\t제목 길이 초과입니다.");
+				System.out.printf("\t\t\t제한 : 100byte, 입력 : %dbyte\n",ptitle.getBytes().length);
 			}
 			
 		}//while 제목작성 및 유효성 검사
@@ -215,24 +264,26 @@ public class Method {
 		String pcontents="";
 
 		while(true) {//내용 유효성 검사 max byte 이하
-			System.out.print("내용 입력: ");
+			System.out.print("\t\t\t내용 입력: ('q'를 입력하면 입력을 마칩니다.)\n");
 			boolean flag=true;
 			
 			while(flag) {//반복문을 통해 Enter를 입력해도 작성을 중지하지 않는다. 'q'를 입력하면 작성 완료
+				System.out.print("\t\t\t▶");
 				String str=scan.nextLine();
 				if(str.toLowerCase().equals("q")) {
-					System.out.println("작성을 완료했습니다.");
+					System.out.println("\t\t\t작성을 완료했습니다.");
 					flag=false;
 				}else {
-					pcontents+=str+" \r\n";
+					pcontents+=str+" \\r\\n";
 				}
+				
 			}//while 건의사항 작성
 			
 			if(pcontents.getBytes().length<max) {
 				break;
 			}else{
-				System.out.println("제목 길이 초과입니다.");
-				System.out.printf("제한 : %dbyte, 입력 : %dbyte\n",max,pcontents.getBytes().length);
+				System.out.println("\t\t\t내용 길이 초과입니다.");
+				System.out.printf("\t\t\t제한 : %dbyte, 입력 : %dbyte\n",max,pcontents.getBytes().length);
 			}//제목 유효성 검사
 		}//while 건의사항 작성 및 유효성 검사
 		return pcontents;
@@ -241,20 +292,31 @@ public class Method {
 	 * 게시된 글을 삭제합니다.
 	 * @return 삭제시 true, 실패시 false
 	 */
-	public boolean procSetDelSuggestion() {//6. 게시글 삭제하기
+	public boolean procSetDelSuggestion(int member_seq) {//6. 게시글 삭제하기 , 글 번호도 입력받아야되네...
 		Connection conn = null;
 		CallableStatement stat = null;
 		DBUtil util = new DBUtil();
-		
-		
-		int member_seq=scan.nextInt();//삭제
-		scan.nextLine();
-		
+		ArrayList<String[]> row=procGetMySuggestions(member_seq);
+		ArrayList<String> allSeq=new ArrayList<String>();
+		int i=0;
+		while(i<row.size()) {
+			allSeq.add(row.get(i)[0]);
+			i++;
+		}
+		int seq=-1;
+		while(true) {
+			seq=seqCheck();//글번호
+			if(allSeq.contains(seq+"")) {
+				break;
+			}else {
+				System.out.println("\t\t\t회원님이 작성한 글번호가 아닙니다.");
+			}
+		}
 		try {
 			String sql = "{call procsetdelSuggestion(?)}";
 			conn = util.open();
 			stat = conn.prepareCall(sql);
-			stat.setInt(1, member_seq);
+			stat.setInt(1, seq);
 			stat.executeQuery();
 
 			stat.close();
@@ -270,37 +332,51 @@ public class Method {
 	 * 게시글 수정하기
 	 * @return true 성공, false 실패
 	 */
-	public boolean procSetSuggestionUpdate() {// 7. 게시글 수정하기(회원) null값은 '0'으로
+	public boolean procSetSuggestionUpdate(int member_seq) {// 7. 게시글 수정하기(회원) null값은 '0'으로
 		Connection conn = null;
 		CallableStatement stat = null;
 		DBUtil util = new DBUtil();
 		
 		
-		System.out.print("글번호 입력: ");//자기가 쓴것만 지워야하는데...
-		int pseq=scan.nextInt();
-		scan.nextLine();
-		String ptitle="";
-		String pcontents="";
-		ptitle = checkTitle(); // 제목 유효성 검사 메소드
-		pcontents = checkContent(4000);// 내용 유효성 검사 메소드
-		
-		
-		try {
-			String sql = "{call procsetSuggestionupdate(?,?,?)}";
-			conn = util.open();
-			stat = conn.prepareCall(sql);
-			stat.setInt(1, pseq);
-			stat.setString(2, ptitle);
-			stat.setString(3, pcontents);
-			stat.executeQuery();
+		ArrayList<String[]> row=procGetMySuggestions(member_seq); //자기가 쓴 글만 가져옴
+		ArrayList<String> mySuggestion=new ArrayList<String>();//자기가 쓴 글 번호를 저장
+		int i=0;
+		while(i<row.size()) {
+			mySuggestion.add(row.get(i)[0]);
+			i++;
+		}
+		while(true) {
+			int pseq = seqCheck();// 자기가 쓴것만 지워야하는데...
 
-			stat.close();
-			conn.close();
-			return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			return false;
+			if (mySuggestion.contains(pseq + "")) {
+
+				String ptitle = "";
+				String pcontents = "";
+				ptitle = checkTitle(); // 제목 유효성 검사 메소드
+				pcontents = checkContent(4000);// 내용 유효성 검사 메소드
+
+				try {
+					String sql = "{call procsetSuggestionupdate(?,?,?)}";
+					conn = util.open();
+					stat = conn.prepareCall(sql);
+					stat.setInt(1, (pseq));
+					stat.setString(2, ptitle);
+					stat.setString(3, pcontents);
+					stat.executeQuery();
+
+					stat.close();
+					conn.close();
+					return true;
+					
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					return false;
+				}
+			} else {
+				System.out.print("\t\t\t회원님이 작성하신 글이 아닙니다.\n");
+				continue;
+			}
 		}
 	}//procsetSuggestionupdate
 	/**
@@ -312,26 +388,19 @@ public class Method {
 		CallableStatement stat = null;
 		DBUtil util = new DBUtil();
 		
-		ArrayList<String> allSeq=new ArrayList<String>(); // 미답변 글번호를 넣을 컬렉션
-		int i=0;
-		ArrayList<String[]> row=procGetSuggestions(false);
+		ArrayList<String> allSeq = hasSeq(procGetSuggestions(false));//seq 번호를 가지고 있는지 확인하고 싶다.
 		
-		while(i<row.size()) {//미답변 글번호를 모두 가져옴
-			allSeq.add(row.get(i)[0]);
-			i++;
-		}//while
+		int pseq = seqCheck();
 		
-		System.out.print("글번호 입력: ");
-		int pseq=-1;
+		
 		boolean flag=true;
 		while(flag) {
-			pseq=scan.nextInt();
-			scan.nextLine();
+			
 			if(allSeq.contains(pseq+"")) {
 				flag=false;
 			}else {
-				System.out.println("이미 답변이 작성되었거나 없는 글 번호입니다.");
-				System.out.println("다시 입력 : ");
+				System.out.println("\t\t\t이미 답변이 작성되었거나 없는 글 번호입니다.");
+				System.out.println("\t\t\t다시 입력 : ");
 			}
 			
 		}//글번호 유효성 검사
@@ -356,6 +425,81 @@ public class Method {
 			return false;
 		}
 	}//procsetSuggestionAnswer()
+
+	private ArrayList<String> hasSeq(ArrayList<String[]> collection) {//글번호를 확인할 컬렉션 입력받음
+		ArrayList<String> allSeq=new ArrayList<String>(); //  글번호를 넣을 컬렉션
+		int i=0;
+		
+		ArrayList<String[]> row=collection;
+		
+		while(i<row.size()) {// 글번호를 모두 가져옴
+			allSeq.add(row.get(i)[0]);
+			i++;
+		}//while
+		return allSeq;
+	}
+
+	/**
+	 *	회원번호를 입력받아 자신이 쓴 글들의 정보를 가져옵니다.
+	 * @param member_seq 회원번호
+	 * @return  ArrayList<String[]> [0]글번호 [1]제목 [2]이름 [3]날짜 [4]건의사항 [5]답변 [6]전화번호
+	 */
+	public ArrayList<String[]> procGetMySuggestions(int member_seq){//10.회원번호를 입력받아 글 가져오기
+		Connection conn = null;
+		CallableStatement stat = null;
+		DBUtil util = new DBUtil();
+		ResultSet rs = null;
+		ArrayList<String[]> row=new ArrayList<String[]>();
+		try {
+			String sql = "{call procgetsuggestionsbymem_seq(?,?)}";
+			conn = util.open();
+			stat = conn.prepareCall(sql);
+			stat.registerOutParameter(1, OracleTypes.CURSOR);
+			stat.setInt(2, member_seq);
+			
+			stat.executeQuery();
+			rs=(ResultSet)stat.getObject(1);
+			while(rs.next()) {
+				String[] str= {rs.getString("글번호")
+							  ,rs.getNString("제목")
+							  ,rs.getNString("이름")
+							  ,rs.getNString("날짜")
+							  ,rs.getNString("건의사항")
+							  ,rs.getNString("답변")
+							  ,rs.getNString("전화번호")};
+				row.add(str);
+			}
+			
+			stat.close();
+			conn.close();
+			return row;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("데이터를 가져오는데 실패했습니다.");
+			return row;
+		}
+	}//procgetmysuggestions
+	
+	private int seqCheck() {//글번호 유효성 검사 메소드
+		System.out.print("\t\t\t글번호 입력: ");
+		String pseq="";
+		while(true) {
+			pseq=scan.nextLine();
+			if(isNumber(pseq)) {
+				break;
+			}else {
+				System.out.println("\t\t\t숫자가 아닙니다.");
+				System.out.print("\t\t\t재입력 :");
+			}
+		}
+		return Integer.parseInt(pseq);
+	}//seqCheck
+
+	
+	private static boolean isNumber(String str) {//문자열에 숫자만 있는지 확인하는 메소드
+		return str.matches("^[0-9]*$");
+	}//isNumber
 }
 
 

@@ -10,10 +10,8 @@ public class MemberMain {
 
 	public void mainmenu(MemberUser memberUser) {
 		
-		
 		MemberUser user = memberUser;
 		
-
 		Scanner scan = new Scanner(System.in);
 		String num = "";
 		
@@ -45,7 +43,11 @@ public class MemberMain {
 			// 마이페이지
 			else if (num.equals("3")) {
 				MemberPage page = new MemberPage();
-				page.pageMenu(memberUser);
+				int result = page.pageMenu(memberUser);
+				// 탈퇴된 회원인 경우 이전 메뉴
+				if (result == 1) {
+					break;
+				}
 			}
 			// 뒤로 가기
 			else if (num.equals("0")) {

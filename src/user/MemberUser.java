@@ -45,7 +45,7 @@ public class MemberUser {
 			// Insert info to loginInfo map
 			// 데이터 입력
 			while (rs.next()) {
-				loginInfo.put(rs.getString("tel"), rs.getString("ssn"));
+				loginInfo.put(rs.getString("tel"), rs.getString("ssn") + "," + rs.getString("seq"));
 			}
 			// input id,pw
 			// 사용자에게 id,pw 입력받기
@@ -66,7 +66,9 @@ public class MemberUser {
 				if (id.equals(inputId)) {
 
 					// password get
-					String pw = loginInfo.get(id);
+					String pw = loginInfo.get(id).split(",")[0];
+					int num = Integer.parseInt(loginInfo.get(id).split(",")[1]);
+					
 
 					// password matching
 					if (pw.equals(inputPw)) {
@@ -76,6 +78,7 @@ public class MemberUser {
 						// set info
 						memberUser.setId(id);
 						memberUser.setPw(pw);
+						memberUser.setNum(num);
 						
 						// login on
 						memberUser.loginFlag = true;

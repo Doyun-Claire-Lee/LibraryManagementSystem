@@ -42,7 +42,7 @@ public class AdminMain {
 			// 문의게시판 관리
 			else if (num.equals("3")) {
 				AdminBoard board = new AdminBoard();
-				board.boardMenu(adminUser);
+				board.exe();
 			}
 			// 뒤로 가기
 			else if (num.equals("0")) {

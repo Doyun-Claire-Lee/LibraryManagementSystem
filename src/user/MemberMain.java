@@ -38,7 +38,7 @@ public class MemberMain {
 			// 문의게시판
 			else if (num.equals("2")) {
 				MemberBoard board = new MemberBoard();
-				board.boardMenu(memberUser);
+				board.exe(memberUser.getNum());
 			}
 			// 마이페이지
 			else if (num.equals("3")) {

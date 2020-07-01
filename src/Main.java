@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 import admin.AdminUser;
+import user.MemberJoin;
 import user.MemberUser;
 
 public class Main {
@@ -41,6 +42,8 @@ public class Main {
 			}
 			else if (num.contentEquals("3")) {
 				//회원가입
+				MemberJoin memberJoin = new MemberJoin();
+				memberJoin.procAddMember();
 				
 			}
 			//종료

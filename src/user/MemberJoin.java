@@ -30,6 +30,7 @@ public class MemberJoin {
 		DBUtil util = new DBUtil();
 		Connection conn = null;
 		CallableStatement stat = null;
+		ResultSet rs = null;
 		Scanner scan = new Scanner(System.in);
 		
 		System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
@@ -37,7 +38,7 @@ public class MemberJoin {
 		System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 		System.out.println();
 		
-		while (true ) {
+		while (true) {
 			
 			System.out.println("\t\t\t이전 메뉴로 돌아가시려면 0을 입력하세요.");
 			System.out.println();
@@ -99,6 +100,7 @@ public class MemberJoin {
 							
 							//쿼리 실행
 							stat.executeQuery();
+							System.out.println(stat.getInt(5));
 							
 							//성공(0), 실패(1) 결과값 받아오기
 							if (stat.getInt(5) == 0) {
@@ -125,7 +127,6 @@ public class MemberJoin {
 		}//while
 		
 		System.out.println("\t\t\t엔터를 입력하면 이전 화면으로 돌아갑니다.");
-		System.out.println();
 		scan.nextLine();
 	}//procAddMember
 	

@@ -87,7 +87,7 @@ public class Method {
 							  ,rs.getNString("제목")
 							  ,rs.getNString("이름")
 							  ,rs.getNString("날짜")
-							  ,rs.getNString("건의사항")
+							  ,rs.getNString("건의사항")==null?"건의내용이 없습니다.":rs.getString("건의사항").replace(".", ".\r\n\t\t\t")
 							  ,rs.getNString("답변")==null?"답변이 아직 등록되지 않았습니다.":rs.getString("답변").replace(".", ".\r\n\t\t\t")
 							  ,rs.getNString("전화번호")};
 				row.add(str);
@@ -137,7 +137,7 @@ public class Method {
 								, rs.getString("제목")
 								, rs.getString("이름")
 								, rs.getString("날짜")
-								, rs.getString("건의사항").replace(".", ".\r\n\t\t\t")
+								, rs.getString("건의사항")==null?"건의내용이 없습니다.":rs.getString("건의사항").replace(".", ".\r\n\t\t\t")
 								, rs.getString("답변")==null?"답변이 아직 등록되지 않았습니다.":rs.getString("답변").replace(".", ".\r\n\t\t\t")
 								, rs.getString("전화번호") };
 						row.add(str);
@@ -184,7 +184,7 @@ public class Method {
 							  ,rs.getNString("제목")
 							  ,rs.getNString("이름")
 							  ,rs.getNString("날짜")
-							  ,rs.getNString("건의사항")
+							  ,rs.getNString("건의사항")==null?"건의내용이 없습니다.":rs.getString("건의사항").replace(".", ".\r\n\t\t\t")
 							  ,rs.getNString("답변")==null?"답변이 아직 등록되지 않았습니다.":rs.getString("답변").replace(".", ".\r\n\t\t\t")
 							  ,rs.getNString("전화번호")};
 				row.add(str);
@@ -479,12 +479,12 @@ public class Method {
 		
 		ArrayList<String> allSeq = hasSeq(procGetSuggestions(false));//seq 번호를 가지고 있는지 확인하고 싶다.
 		
-		int pseq = seqCheck();
 		
+		int pseq=-1;
 		
 		boolean flag=true;
 		while(flag) {
-			
+			pseq = seqCheck();	
 			if(allSeq.contains(pseq+"")) {
 				flag=false;
 			}else {

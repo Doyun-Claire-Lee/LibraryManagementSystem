@@ -78,7 +78,7 @@ static Scanner scan = new Scanner(System.in);
 						ArrayList<String[]> row = m.procGetSuggestionsInfo();
 
 						String aa = row.get(0)[2].substring(0, 1);
-						String cc = row.get(0)[2].substring(2, 3);// 이름 가운데는 *로 익명 보장
+						String cc = row.get(0)[2].substring(row.get(0)[2].length()-1, row.get(0)[2].length());// 이름 가운데는 *로 익명 보장
 						System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 						System.out.printf("\t\t\t제목: %s\n", row.get(0)[1]);
 						System.out.printf("\t\t\t작성자: %s\n", aa + "*" + cc);

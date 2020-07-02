@@ -159,14 +159,55 @@ public class MyUpdateInfo {
 		DBUtil util = new DBUtil();
 		Connection conn = null;
 		CallableStatement callstat = null;
+		Statement stat = null;
+		ResultSet rs = null;
 		
 		conn = util.open();
-		
-		// 새 연락처 입력
 		System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
-		System.out.println("\t\t\t수정 할 새로운 연락처를 입력하세요.");
-		System.out.print("\t\t\t▷ 입력 : ");
-		String tel = sc.nextLine();
+		
+		String tel = "";
+		// 새 연락처 입력
+		while (true) {
+			System.out.println("\t\t\t수정 할 새로운 연락처를 입력하세요.(010-XXXX-XXXX)");
+			System.out.print("\t\t\t▷ 입력 : ");
+			tel = sc.nextLine();
+			
+			if (tel.replace("-", "").length() == 7) {
+				
+				try {
+					stat = conn.createStatement();
+					String sql = "select * from tblmember where withdrawal = 0";
+					rs = stat.executeQuery(sql);
+					//동일한 번호가 있는지 확인하는 변수
+					// true가 사용가능한 번호임을 알려줌. false는 동일한 번호가 있으므로 사용불가 번호임.
+					boolean flag = true;
+					
+					while (rs.next()) {
+						String telCheck = rs.getString("tel").replace("-", "");
+						// 동일한 번호가 있으면 flag = false
+						if (telCheck.equals(tel)) {
+							flag = false;
+						}
+					}
+					
+					if (flag == true) {
+						// 사용 가능 번호
+						break;
+					} else {
+						// 사용 불가 번호
+						System.out.println();
+						System.out.println("\t\t\t중복된 연락처가 있습니다. 다시 입력해주세요.");						
+					}
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			} else {
+				System.out.println();
+				System.out.println("\t\t\t올바른 연락처를 입력해주세요.");
+			}
+		}
 
 		// 수정 확인 입력을 잘못했을 떄를 대비한 while loop
 		while (true) {

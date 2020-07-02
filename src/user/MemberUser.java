@@ -1,5 +1,6 @@
 package user;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -12,6 +13,7 @@ import admin.AdminUser;
 import user.MemberMain;
 import user.MemberUser;
 import admin.DBUtil;
+import oracle.jdbc.OracleTypes;
 
 public class MemberUser {
 
@@ -45,7 +47,10 @@ public class MemberUser {
 			// Insert info to loginInfo map
 			// 데이터 입력
 			while (rs.next()) {
-				loginInfo.put(rs.getString("tel"), rs.getString("ssn") + "," + rs.getString("seq"));
+				
+				loginInfo.put(rs.getString("tel"), rs.getString("ssn").substring(rs.getString("ssn").indexOf('-') +1) + "," + rs.getString("seq"));
+				
+				
 			}
 			// input id,pw
 			// 사용자에게 id,pw 입력받기
@@ -55,8 +60,6 @@ public class MemberUser {
 			String inputPw = scan.nextLine();
 			System.out.println();
 
-			// iterator
-			Iterator<String> keys = loginInfo.keySet().iterator();
 
 			// loginInfo search
 			// id 탐색
@@ -73,6 +76,7 @@ public class MemberUser {
 					// password matching
 					if (pw.equals(inputPw)) {
 						
+						
 						MemberMain memberMain = new MemberMain();
 						
 						// set info
@@ -80,12 +84,42 @@ public class MemberUser {
 						memberUser.setPw(pw);
 						memberUser.setNum(num);
 						
-						// login on
-						memberUser.loginFlag = true;
-
-						// mainmenu method
-						// 메인메뉴 메소드 실행
-						memberMain.mainmenu(memberUser);
+						
+						//탈퇴 회원 여부 확인
+						String sqlDrawal = String.format("select * from tblmember where seq = %s", memberUser.getNum());
+						stat = conn.prepareCall(sqlDrawal);
+						rs = stat.executeQuery(sqlDrawal);
+					
+						//회원탈퇴 출력
+						while(rs.next()) {
+						
+							
+								if ( rs.getString("withdrawal").equals("0")) {
+								
+								System.out.println("\t\t\t탈퇴 처리가 된 회원 계정입니다.");
+								System.out.println("\t\t\t엔터를 입력하면 이전 메뉴로 돌아갑니다.");
+								scan.nextLine();								
+								
+								break;
+								
+								};
+								
+								
+								
+								// login on
+								memberUser.loginFlag = true;
+								
+								
+								//도서관 방문 인사 및 회원정보 출력
+								memberLoginMessage(memberUser);
+								
+								// mainmenu method
+								// 메인메뉴 메소드 실행
+								memberMain.mainmenu(memberUser);
+							
+								
+						}
+						
 						
 						// Database connection close
 						stat.close();
@@ -95,9 +129,13 @@ public class MemberUser {
 				} 
 			}
 			
+			
 			// when enter wrong info
 			if(!memberUser.loginFlag) {
-				System.out.println("\t\t\t아이디와 비밀번호를 다시 입력해주세요.");
+				
+				System.out.println("\t\t\t아이디 혹은 비밀번호를 잘못 입력하셨습니다.");					
+				memberUser.login(memberUser);
+				
 			} 
 			// logout
 			else {
@@ -117,7 +155,52 @@ public class MemberUser {
 	}//login
 	
 
-	
+	private void memberLoginMessage(MemberUser memberUser) {
+		
+		Connection conn = null;
+		CallableStatement stat = null;
+		ResultSet rs = null;
+		DBUtil util = new DBUtil();
+
+		try {
+			
+			
+			//프로시저 호출 준비
+			conn = util.open("localhost","lms","java1234");
+			
+			//로그인 성공 시 해당 회원번호와 일치하는 데이터가져오기
+			String sql = String.format("select * from tblmember where seq = %s", memberUser.getNum());
+			stat = conn.prepareCall(sql);
+			
+			rs = stat.executeQuery(sql);
+			
+			//도서관 방문 인사 및 회원정보 출력하기
+			while(rs.next()) {
+				
+				System.out.println();
+				System.out.println();
+				System.out.printf("\t\t\t%s회원님 도서관 방문을 환영합니다.\n"
+						, rs.getString("name")
+						, rs.getString("tel"));
+				
+				System.out.printf("\t\t\t| 이름: %s   연락처 : %s |\n "
+													, rs.getString("name")
+													, rs.getString("tel"));
+			}
+
+			//접속종료
+			stat.close();
+			conn.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+
+
+
 	// getter & setter
 	public int getNum() {
 		return num;

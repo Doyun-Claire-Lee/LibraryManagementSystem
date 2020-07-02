@@ -89,7 +89,10 @@ public class AdminUser {
 			
 			// when enter wrong info
 			if(!adminUser.loginFlag) {
-				System.out.println("\t\t\t아이디와 비밀번호를 다시 입력해주세요.");
+				
+				System.out.println("\t\t\t아이디 혹은 비밀번호를 잘못 입력하셨습니다.");					
+				adminUser.login(adminUser);
+				
 			} 
 			// logout
 			else {

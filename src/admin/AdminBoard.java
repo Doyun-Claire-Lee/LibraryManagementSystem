@@ -29,7 +29,7 @@ public class AdminBoard {
 					j = 0;
 				} else {
 					getArrayInfo(suggetionRow, j);
-					int num = paging(j, "문의글 수정 및 삭제", "문의글 답변 작성", "문의글 검색");// 반복자와 리턴값;//사용자에게 입력받을 메뉴번호,// 아래 if문에서 값을 받는다.
+					int num = paging(j, "문의글 조회 및 삭제", "문의글 답변 작성", "문의글 검색");// 반복자와 리턴값;//사용자에게 입력받을 메뉴번호,// 아래 if문에서 값을 받는다.
 					
 
 					// 사용자에게 번호 입력받음
@@ -47,7 +47,7 @@ public class AdminBoard {
 						continue;
 					} else if (num == 3) {// 문의글 수정 및 삭제
 						System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
-						System.out.print("\t\t\t1. 문의글 수정\n");
+						System.out.print("\t\t\t1. 문의글 조회\n");
 						System.out.print("\t\t\t2. 문의글 삭제\n");
 						System.out.println("\t\t\t0. 뒤로가기");
 						System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
@@ -56,7 +56,18 @@ public class AdminBoard {
 						while (true) {
 							String select = scan.nextLine();
 							if (select.equals("1")) {
-								m.procSetSuggestionUpdate();
+								ArrayList<String[]> row = m.procGetSuggestionsInfo();
+
+								
+								System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+								System.out.printf("\t\t\t제목: %s\n", row.get(0)[1]);
+								System.out.printf("\t\t\t작성자: %s\n",row.get(0)[2] );
+								System.out.printf("\t\t\t작성 날짜: %s\n", row.get(0)[3]);
+								System.out.printf("\t\t\t건의 내용: %s\n", row.get(0)[4]);
+								System.out.println("\t\t\t--------------------------------------------------");
+								System.out.printf("\t\t\t답변: %s\n", row.get(0)[5]);
+								System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+								scan.nextLine();
 								break;
 							} else if (select.equals("2")) {
 								m.procSetDelSuggestion();
@@ -85,11 +96,9 @@ public class AdminBoard {
 						ArrayList<String[]> row = m.procGetSuggestionsInfo();
 						
 
-						String aa = row.get(0)[2].substring(0, 1);
-						String cc = row.get(0)[2].substring(2, 3);// 이름 가운데는 *로 익명 보장
 						System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 						System.out.printf("\t\t\t제목: %s\n", row.get(0)[1]);
-						System.out.printf("\t\t\t작성자: %s\n", aa + "*" + cc);
+						System.out.printf("\t\t\t작성자: %s\n",row.get(0)[2] );
 						System.out.printf("\t\t\t작성 날짜: %s\n", row.get(0)[3]);
 						System.out.printf("\t\t\t건의 내용: %s\n", row.get(0)[4]);
 						System.out.println("\t\t\t--------------------------------------------------");

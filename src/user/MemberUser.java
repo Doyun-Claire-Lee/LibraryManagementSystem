@@ -102,7 +102,7 @@ public class MemberUser {
 						//회원탈퇴 출력
 						while(rs.next()) {
 						
-							
+								
 								if ( rs.getString("withdrawal").equals("1")) {
 								
 								System.out.println("\t\t\t탈퇴 처리가 된 회원 계정입니다.");
@@ -112,9 +112,21 @@ public class MemberUser {
 								break;
 								
 								
-								};
+								} else {
+									
+									// login on
+									memberUser.loginFlag = true;					
+
+									//도서관 방문 인사 및 회원정보 출력
+									memberLoginMessage(memberUser);
+									
+									// mainmenu method
+									// 메인메뉴 메소드 실행
+									memberMain.mainmenu(memberUser);
+									
+								}
 								
-								
+
 								
 								// when enter wrong info
 								if(!memberUser.loginFlag) {
@@ -128,19 +140,8 @@ public class MemberUser {
 									System.out.println("\t\t\t로그아웃을 진행합니다.");
 									scan.nextLine();
 									memberUser.loginFlag = false;
+									
 								}
-								
-								
-								// login on
-								memberUser.loginFlag = true;
-								
-								
-								//도서관 방문 인사 및 회원정보 출력
-								memberLoginMessage(memberUser);
-								
-								// mainmenu method
-								// 메인메뉴 메소드 실행
-								memberMain.mainmenu(memberUser);
 								
 						}
 						

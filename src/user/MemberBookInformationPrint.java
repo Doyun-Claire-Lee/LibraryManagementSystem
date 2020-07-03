@@ -40,14 +40,22 @@ public class MemberBookInformationPrint {
 			rs = (ResultSet)stat.getObject(2);
 			
 			
-			System.out.println("\t\t\t[책이름]\t\t[출판사]\t[저자]");
+//			System.out.println("\t\t\t[책이름]\t\t[출판사]\t[저자]");
 			while(rs.next()) {
+				System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+				System.out.printf("\t\t\t[책이름] : %s\n",rs.getString(1));
+				System.out.printf("\t\t\t[출판사] : %s\n",rs.getString(2));
+				System.out.printf("\t\t\t[저자] : %s\n",rs.getString(3));
+				System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 				
-				System.out.printf("\t\t\t%s\t\t%s\t%s\n",
-						rs.getString(1),//책이름
-						rs.getString(2),//출판사
-						rs.getString(3));//저자
-	
+				
+//				System.out.printf("\t\t\t%s\t\t%s\t%s\n",
+//						rs.getString(1),//책이름
+//						rs.getString(2),//출판사
+//						rs.getString(3));//저자
+//	
+					
+			
 			}
 			
 			

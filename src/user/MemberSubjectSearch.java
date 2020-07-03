@@ -151,7 +151,7 @@ public class MemberSubjectSearch {
 			if (selectNum[0] == 1) {//대여가능 -> 여기에서도 대여신청 하거나 뒤로가거나의 선택지를 준다.
 				
 				MemberRentTheBook mrt = new MemberRentTheBook();
-				mrt.rentBook(selectNum[1],bookList,mu);//도서정보번호를 넘긴다.
+				mrt.rentBook(selectNum[1],bookList,mu);//도서정보번호를 넘긴다.??
 				
 				
 				

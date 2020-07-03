@@ -48,17 +48,17 @@ public class MemberBookReservation {
 			String input = scan.nextLine();
 			System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 			
+			MemberTransSeq mts = new MemberTransSeq();
+			int userSeq = mts.userSeq(user.pw, user.id);//회원의 회원번호를 불러오기
 			
 			if (input.equals("1")) {//1.해당 책 예약하기
 				flag = false;//반복문 끊어주기
-				
-				MemberTransSeq mts = new MemberTransSeq();
-				int userSeq = mts.userSeq(user.pw, user.id);//회원의 회원번호를 불러오기
-				
+			
 				/* 고려해야 할 가능성
 				 * 1. 내가 해당책을 이미 예약한 경우
-				 * 2. 다른사람이 먼저 예약을해서 내 순위가 밀리는 경우. 
-				 * */
+				 * 2. 다른사람이 먼저 예약을해서 내 순위가 밀리는 경우.
+				 **3. 내가 해당 책을 가지고 있는경우 ㅋㅋㅋㅋ 
+				 **/
 				
 				dataList = checkMyList(bookCode);//예약 정보를 담아주는 리스트.
 				
@@ -67,19 +67,33 @@ public class MemberBookReservation {
 				for (int i = 0; i < dataList.size(); i++) {
 					
 					if (dataList.get(i)[0].equals(""+userSeq)) {//내가 이미 예약 해놓은것
-						my = false;//빌릴 수 없음.
+						my = false;//빌릴 수 없음
 					}
 				}//for
 				
-				if (my) { //예약이 가능한 경우
+				//내가 해당책을 이미 대여중인경우도 불가능하다.-> 메서드로 뺴주자
+				boolean myRent = myRentList(userSeq,bookCode);//내가 빌리지 않았으면 true 가 나올것 빌렸으면 false가 나올것
+				
+				
+				//if(myRentList(userSeq,bookCode))
+				
+				
+				
+				
+				if (my && myRent) { //예약이 가능한 경우
 					
 					//메서드를 따로 빼서 쓰자
 					resPossible(dataList,userSeq,bookCode);//예약을 진행
 					
-				} else {//예약이 불가능한 경우
+				} else if (my == false){//예약이 불가능한 경우 -> 내가 이미 예약을 한 경우
 					System.out.println("\t\t\t회원님 께서는 이미 해당 도서에 대한 예약내역이 존재합니다.");
 					System.out.println("\t\t\t계속 하시려면 엔터를 누르세요 ");
 					String back = scan.nextLine();//뒤로 돌아가기
+				} else {//내가 해당책을 이미 소유하고 있는 경우
+					System.out.println("\t\t\t회원님 께서는 이미 해당 도서에 대한 대여내역이 존재합니다.");
+					System.out.println("\t\t\t계속 하시려면 엔터를 누르세요 ");
+					String back = scan.nextLine();//뒤로 돌아가기
+					
 				}
 				
 				
@@ -150,7 +164,55 @@ public class MemberBookReservation {
 		return dataList;
 	}//checkMyList()
 	
+	
+	
 	/**
+	 * 해당 회원이 해당 도서를 예약을 했는지 확인해주는 메소드
+	 * @param userSeq 유저번호
+	 * @param bookCode 도서정보번호
+	 * @return 참 또는 거짓
+	 */
+	public boolean myRentList(int userSeq,int bookCode) {
+		
+		Connection conn = null;
+		CallableStatement stat = null;
+		ResultSet rs = null;
+		DBUtil util = new DBUtil();
+		
+		boolean answer = true;//해당 책 번호가 존재하면 false 로 바꾸어 줄것이다.
+		
+		
+		try {
+			
+			String sql = "{call procNotReturnBookList(?,?)}";//프로시저 불러주기
+			
+			conn = util.open("localhost", "lms", "java1234");
+			stat = conn.prepareCall(sql);
+			
+			stat.setInt(1, userSeq);//회원번호 집어넣어주기
+			stat.registerOutParameter(2, OracleTypes.CURSOR);//커서 넣어주기
+			
+			stat.executeQuery();
+		
+			rs = (ResultSet)stat.getObject(2);
+			
+			while(rs.next()) {
+				if (rs.getInt(4)==bookCode) {
+					answer = false;
+				}
+			}
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("오류가 발생");
+		}
+		
+		return answer;
+		
+	}
+	
+	/** 
 	 * 도서에 대한 예약을 진행한다.
 	 * @param dataList 예약 정보를 담아주는 리스트.
 	 * @param userSeq 회원번호
@@ -180,7 +242,7 @@ public class MemberBookReservation {
 				stat = conn.prepareCall(sql);
 				
 				
-				stat.setInt(1, bookInfo);//저자 이름 넣어주기
+				stat.setInt(1, bookInfo);//도서정보번호 넣어주기
 				stat.registerOutParameter(2, OracleTypes.CURSOR);//커서 넣어주기
 				
 				stat.executeQuery();
@@ -227,7 +289,7 @@ public class MemberBookReservation {
 				System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 				System.out.println("\t\t\t예약신청이 완료되었습니다.");
 				System.out.printf("\t\t\t%tF에 대여해가시면 됩니다.\n",rc);
-				System.out.printf("\t\t\t반납은 %tF일 까지 입니다. 반납기간이 지연되면 연체요금이 발생합니다.\n",addCalendar(rc,5));
+				System.out.printf("\t\t\t반납은 %tF일 까지 입니다. 반납기간이 지연되면 연체요금이 발생합니다.\n",addCalendar(rc,7));
 				MemberBookInformationPrint mbip = new MemberBookInformationPrint();
 				mbip.bookPrint(bookInfo);
 				System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
@@ -242,34 +304,126 @@ public class MemberBookReservation {
 			
 			
 			
-		} else {//예약을 대기 해야 한다.
+		} else {//예약을 대기 해야 한다. -> 가장 빠른대로 하는 알고리즘은 아닌듯...........
 			
-			long minDate = Long.MAX_VALUE;//틱값을 받아줄 놈을 대기시킨다. -> 가장 높은값으로 넣어준다.
+			int bookCount = howBookCount(bookInfo);//해당 책(도서정보번호에 부합하는)의 개수가 몇권인지 파악.
+			
+			
 			
 			Calendar rc = Calendar.getInstance();
 			
-			for (int i = 0; i < dataList.size(); i++) {
-				Calendar c = Calendar.getInstance();
+			
+			if (bookCount == 1) {//책의 개수가 한권일때
 				
-				StringTokenizer stk = new StringTokenizer(dataList.get(i)[1],"-");//날짜를 받아오고 그것을 년월일로 쪼갤것이다.
-				int year = Integer.parseInt(stk.nextToken());//년
-				int mon = Integer.parseInt(stk.nextToken())-1;//월
-				int date = Integer.parseInt(stk.nextToken().trim());//일-> 문제가 발생
+				long maxDate = Long.MIN_VALUE;//틱값을 받아줄 놈을 대기시킨다. -> 가장 낮은값으로 넣어준다.
 				
-				c.set(year,mon,date);
 				
-				long getTick = c.getTimeInMillis();
+				for (int i = 0; i < dataList.size(); i++) {
+					Calendar c = Calendar.getInstance();
+					
+					StringTokenizer stk = new StringTokenizer(dataList.get(i)[1],"-");//날짜를 받아오고 그것을 년월일로 쪼갤것이다.
+					int year = Integer.parseInt(stk.nextToken());//년
+					int mon = Integer.parseInt(stk.nextToken())-1;//월
+					int date = Integer.parseInt(stk.nextToken().trim());//일-> 문제가 발생
+					
+					c.set(year,mon,date);
+					
+					long getTick = c.getTimeInMillis();
+					
+					if (getTick >= maxDate) {//예약일자가 더 먼~ 날을 받아온다.
+						maxDate = getTick;//최소값 집어넣기.
+						rc = c;//캘린더 객체 넣어주기.
+					}
+					
+				}//for
 				
-				if (minDate >= getTick) {//반납일자가 더 가까운 날을 받아온다.
-					minDate = getTick;//최소값 집어넣기
-					rc = c;//캘린더 객체 넣어주기
+				
+				
+				
+			} else {//책의 개수가 1권이 아닐때
+				
+				//책의 개수가 한권이 아닐땐, 예약대기를 봐줘야 한다 홀수인 경우와 짝수인 경우에 따라 나눠서 생각해주는게 좋다.
+				
+				int dataLen = dataList.size();//예약정보를 담아주는 리스트의 길이 -> 몇명이 예약을 했는지 보여준다. 
+				
+				if (dataLen == 1) {// 예약 내역이 단 한건만 있는 경우에 -> 두건이 이미 대여가 되었으므로 두건의 대여중 가장 먼날짜에 반납되는것 + 1 예약을 수행
+
+					Connection conn = null;
+					CallableStatement stat = null;
+					ResultSet rs = null;
+					DBUtil util = new DBUtil();
+
+					try {
+
+						// 여기서 시간을 고려해서 더 느린 시간 + 1일 로 예약을 잡아주면 된다. 그리고 나서 예약을 진행해주면 된다.
+
+						String sql = "{call procRentPossible(?,?)}";// 프로시저 불러주기
+
+						conn = util.open("localhost", "lms", "java1234");
+						stat = conn.prepareCall(sql);
+
+						stat.setInt(1, bookInfo);// 도서정보번호 넣어주기
+						stat.registerOutParameter(2, OracleTypes.CURSOR);// 커서 넣어주기
+
+						stat.executeQuery();
+
+						rs = (ResultSet) stat.getObject(2);
+
+						long maxDate = Long.MIN_VALUE;// 틱값을 받아줄 놈을 대기시킨다. -> 가장 낮은값으로 진행.
+
+						while (rs.next()) {
+							Calendar c = Calendar.getInstance();
+
+							StringTokenizer stk = new StringTokenizer(rs.getString(1).substring(0, 11), "-");// 반납일 가져오기
+							int year = Integer.parseInt(stk.nextToken());// 년
+							int mon = Integer.parseInt(stk.nextToken()) - 1;// 월 -> 1을 빼줘야함
+							int date = Integer.parseInt(stk.nextToken().trim());// 일
+
+							c.set(year, mon, date);
+
+							long getTick = c.getTimeInMillis();
+
+							if (getTick >= maxDate) {// 반납일자가 더 먼 날을 받아온다.
+								maxDate = getTick;// 최대값 집어넣기
+								rc = c;// 캘린더 객체 넣어주기
+							}
+
+						} // while()
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println("뭔가 잘못됨");
+					}
+					// 예약내역이 1건만 있는 경우에 처리
+				} else {//예약 내역이 2건 이상 있는 경우에 처리
+					
+					Calendar c = Calendar.getInstance();
+					
+					String totalDate = dataList.get(dataLen-2)[1];//예약날짜 받아옴
+					StringTokenizer stk = new StringTokenizer(totalDate,"-");//예약일 가져오기
+					
+					int year = Integer.parseInt(stk.nextToken());// 년
+					int mon = Integer.parseInt(stk.nextToken()) - 1;// 월 -> 1을 빼줘야함
+					int date = Integer.parseInt(stk.nextToken().trim());// 일
+					
+					c.set(year, mon, date);
+					c.add(Calendar.DATE, 7);//예약일 +7일까지가 대여기간이므로
+					
+					rc = c;
+					
 				}
 				
-			}//for
+				
+				
+				
+				
+				
+			}//else
 			
 			
-			//최소일 기준으로 +6일을 하여 예약 해줘야한다.
-			rc.add(Calendar.DATE, 6);//최소 날짜에 1을 더해준다.
+			//여기가 예약쪽인거 같은데...많이 겹칠거 같은데 아닌가?
+			//최소일 기준으로 +1일을 하여 예약 해줘야한다.
+			rc.add(Calendar.DATE, 1);//최소 날짜에 1을 더해준다.
 			
 			String getYear = "" + rc.get(Calendar.YEAR);//최소년도
 			String getMon = format("" + (rc.get(Calendar.MONTH)+1));//최소 월 다시 1을 더해줘야 우리가 원하는 월이 나오게 된다.
@@ -282,10 +436,13 @@ public class MemberBookReservation {
 			System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 			System.out.println("\t\t\t예약신청이 완료되었습니다.");
 			System.out.printf("\t\t\t%tF에 대여해가시면 됩니다.\n",rc);
-			System.out.printf("\t\t\t반납은 %tF일 까지 입니다. 반납기간이 지연되면 연체요금이 발생합니다.\n",addCalendar(rc,5));
+			System.out.printf("\t\t\t반납은 %tF일 까지 입니다.\n",addCalendar(rc,7));//7일 뒤에는 가져와라 이말
 			MemberBookInformationPrint mbip = new MemberBookInformationPrint();
 			mbip.bookPrint(bookInfo);
 			System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
+			
+			
+		
 			
 			
 			
@@ -332,8 +489,46 @@ public class MemberBookReservation {
 		}
 	}
 	
-	
-	
+	/**
+	 * 어떠한 도서 정보번호가 존재할때, 해당 도서정보번호에 해당하는 책의 개수가 몇권인지 확인하는 메서드
+	 * @param bookSeq 도서정보번호
+	 * @return 해당 도서번호에 해당하는 도서의 개수
+	 */
+	public int howBookCount(int bookSeq) {
+		
+		Connection conn = null;
+		CallableStatement stat = null;
+		ResultSet rs = null;
+		DBUtil util = new DBUtil();
+		
+		int bookCount = 0;//책의 개수
+		
+		try {
+			
+			String sql = "{call procBookCount(?,?)}";//예약을 담당해주는 프로시저
+			
+			conn = util.open("localhost", "lms", "java1234");
+			stat = conn.prepareCall(sql);
+			
+			stat.setInt(1, bookSeq);//도서번호 넣어주기
+			stat.registerOutParameter(2, OracleTypes.CURSOR);//커서 넣어주기
+			
+			stat.executeQuery();
+			
+			rs = (ResultSet)stat.getObject(2);
+			
+			while(rs.next()) {
+				bookCount = rs.getInt(1);
+			}
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("오류발생");
+		}
+		return bookCount;
+		
+	}// howBookCount()
 	
 	
 	/**

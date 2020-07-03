@@ -74,7 +74,10 @@ public class MemberRentTheBook {
 			}//for()
 			
 			if (flag) {//내가 책을 대여 할 수 있는 경우
-				String sql = String.format("insert into tblRent values (rent_seq.nextVal,%s,'%s',sysdate,sysdate+5,0)",
+				//System.out.println(bookCode);//이거 지울것.???
+				//System.out.println(userNum);
+				
+				String sql = String.format("insert into tblRent values (rent_seq.nextVal,%d,'%s',sysdate,sysdate+7,0)",
 						userNum,
 						bookCode);//회원번호와 책코드만 넘겨주면 예약 되는방식으로 하자.
 				
@@ -89,8 +92,8 @@ public class MemberRentTheBook {
 				MemberBookInformationPrint mbip = new MemberBookInformationPrint();//출력용
 				mbip.bookPrint(bookSeq);
 				Calendar c = Calendar.getInstance();
-				addCalendar(c,5);
-				System.out.printf("\t\t\t%tF 까지 반납해주세요. 반납일이 지연되면 연체요금이 발생합니다.\n",c);
+				addCalendar(c,7);
+				System.out.printf("\t\t\t%tF 까지 반납해주세요.\n",c);
 				System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 				
 				

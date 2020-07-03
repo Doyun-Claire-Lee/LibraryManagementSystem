@@ -94,7 +94,7 @@ public class MemberUser {
 						while(rs.next()) {
 						
 							
-								if ( rs.getString("withdrawal").equals("0")) {
+								if ( rs.getString("withdrawal").equals("1")) {
 								
 								System.out.println("\t\t\t탈퇴 처리가 된 회원 계정입니다.");
 								System.out.println("\t\t\t엔터를 입력하면 이전 메뉴로 돌아갑니다.");

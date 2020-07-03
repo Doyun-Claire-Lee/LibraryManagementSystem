@@ -91,7 +91,7 @@ public class MemberPaging {
 				if (startIndex == 0) {
 					System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 					System.out.println("\t\t\t1. 다음페이지");
-					System.out.println("\t\t\t0. 종료");
+					System.out.println("\t\t\t0. 다음단계로");
 					System.out.print("\t\t\t입력 : ");
 					String input = scan.nextLine();
 					System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
@@ -107,7 +107,7 @@ public class MemberPaging {
 				} else if (startIndex == cut*(q-1)) {
 					System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 					System.out.println("\t\t\t1. 이전페이지");
-					System.out.println("\t\t\t0. 종료");
+					System.out.println("\t\t\t0. 다음단계로");
 					System.out.print("\t\t\t입력 : ");
 					String input = scan.nextLine();
 					System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
@@ -124,7 +124,7 @@ public class MemberPaging {
 					System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 					System.out.println("\t\t\t1. 다음페이지");
 					System.out.println("\t\t\t2. 이전페이지");
-					System.out.println("\t\t\t0. 종료");
+					System.out.println("\t\t\t0. 다음단계로");
 					System.out.print("\t\t\t입력 : ");
 					String input = scan.nextLine();
 					System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");

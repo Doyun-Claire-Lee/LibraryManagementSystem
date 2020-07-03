@@ -3,9 +3,14 @@ import java.util.Scanner;
 import admin.AdminUser;
 import user.MemberJoin;
 import user.MemberUser;
-
+/**
+ * 
+ * @author Choi Yerim
+ * 프로그램의 메인 메뉴 클래스
+ */
 public class Main {
-		
+	
+
 	//메인메뉴
 	public static void main(String[] args) {
 		

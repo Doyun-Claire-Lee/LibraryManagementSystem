@@ -15,6 +15,11 @@ import user.MemberUser;
 import admin.DBUtil;
 import oracle.jdbc.OracleTypes;
 
+/**
+ * 도서관 회원 로그인 입력 및 확인 메소드
+ * @author Choi Yerim
+ *
+ */
 public class MemberUser {
 
 	int num;
@@ -22,6 +27,10 @@ public class MemberUser {
 	String pw;
 	boolean loginFlag = false;
 	
+	/**
+	 * 로그인 유효성 검사 및 로그인 입력을 위한 메소드
+	 * @param memberUser 로그인 완료 시 데이터를 가져오기 위한 객체
+	 */
 	public void login(MemberUser memberUser) {
 		
 		//Database connection
@@ -102,8 +111,24 @@ public class MemberUser {
 								
 								break;
 								
+								
 								};
 								
+								
+								
+								// when enter wrong info
+								if(!memberUser.loginFlag) {
+									
+									System.out.println("\t\t\t아이디 혹은 비밀번호를 잘못 입력하셨습니다.");					
+									memberUser.login(memberUser);
+									
+								} 
+								// logout
+								else {
+									System.out.println("\t\t\t로그아웃을 진행합니다.");
+									scan.nextLine();
+									memberUser.loginFlag = false;
+								}
 								
 								
 								// login on
@@ -116,7 +141,6 @@ public class MemberUser {
 								// mainmenu method
 								// 메인메뉴 메소드 실행
 								memberMain.mainmenu(memberUser);
-							
 								
 						}
 						
@@ -130,19 +154,7 @@ public class MemberUser {
 			}
 			
 			
-			// when enter wrong info
-			if(!memberUser.loginFlag) {
-				
-				System.out.println("\t\t\t아이디 혹은 비밀번호를 잘못 입력하셨습니다.");					
-				memberUser.login(memberUser);
-				
-			} 
-			// logout
-			else {
-				System.out.println("\t\t\t로그아웃을 진행합니다.");
-				scan.nextLine();
-				memberUser.loginFlag = false;
-			}
+
 			
 
 		} catch (Exception e) {

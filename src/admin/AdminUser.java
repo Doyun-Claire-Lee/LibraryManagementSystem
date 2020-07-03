@@ -7,6 +7,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 
+/**
+ * 도서관 관리자 로그인 입력 및 확인 메소드
+ * @author Choi Yerim
+ *
+ */
 //관리자 로그인 확인 및 데이터 저장
 public class AdminUser {
 	
@@ -15,6 +20,10 @@ public class AdminUser {
 	String pw;
 	boolean loginFlag = false;
 	
+	/**
+	 * 로그인 유효성 검사 및 로그인 입력을 위한 메소드
+	 * @param adminUser 로그인 완료 시 데이터를 가져오기 위한 객체
+	 */
 	public void login(AdminUser adminUser) {
 		
 		//Database connection

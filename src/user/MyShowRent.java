@@ -423,8 +423,8 @@ public class MyShowRent {
 				}
 			}
 
-			if (term == false) { break; }
-			System.out.println();
+//			if (term == false) { break; }
+//			System.out.println();
 		
 			MemberUser user = memberUser;
 			int seq = user.getNum();	// 회원번호

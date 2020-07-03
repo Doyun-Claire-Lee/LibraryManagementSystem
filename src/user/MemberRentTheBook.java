@@ -137,7 +137,7 @@ public class MemberRentTheBook {
 	/**
 	 * 자신이 빌려서 아직 반납 안한 책들을 조회해주는 메서드 : 만약 자기가 a라는 책을 빌려서 아직 반납을 안한 상태인데 또 다시 a를 빌릴수 없게 하려고 
 	 * @param user 회원정보
-	 * @return 회원자신이 아직 반납하지 안은 책들의 정보 리스트
+	 * @return 회원자신이 아직 반납하지 않은 책들의 정보 리스트
 	 */
 	public List<String> checkMyRentList(MemberUser user) {
 		

@@ -45,7 +45,7 @@ public class AdminBoard {
 						j = j - 19;
 
 						continue;
-					} else if (num == 3) {// 문의글 조회 및 삭제
+					} else if (num == 3) {// 문의글 수정 및 삭제
 						System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 						System.out.print("\t\t\t1. 문의글 조회\n");
 						System.out.print("\t\t\t2. 문의글 삭제\n");

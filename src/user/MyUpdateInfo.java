@@ -172,7 +172,7 @@ public class MyUpdateInfo {
 			System.out.print("\t\t\t▷ 입력 : ");
 			tel = sc.nextLine();
 			
-			if (tel.replace("-", "").length() == 11) {
+			if (tel.replace("-", "").length() == 7) {
 				
 				try {
 					stat = conn.createStatement();

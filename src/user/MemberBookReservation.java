@@ -35,7 +35,7 @@ public class MemberBookReservation {
 		
 		System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 		System.out.println("\t\t\t해당 책은 아직 미반납 상태여서 예약만 가능합니다. ");
-		System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓" ;
+		System.out.println("\t\t\t〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓〓");
 		System.out.println();
 		System.out.println();
 		System.out.println();
@@ -304,7 +304,7 @@ public class MemberBookReservation {
 			
 			
 			
-		} else {//예약을 대기 해야 한다. ->
+		} else {//예약을 대기 해야 한다. -> 가장 빠른대로 하는 알고리즘은 아닌듯...........
 			
 			int bookCount = howBookCount(bookInfo);//해당 책(도서정보번호에 부합하는)의 개수가 몇권인지 파악.
 			

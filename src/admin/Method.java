@@ -43,7 +43,7 @@ public class Method {
 							  ,rs.getNString("제목")
 							  ,rs.getNString("이름")
 							  ,rs.getNString("날짜")
-							  ,rs.getNString("건의사항")==null?"건의사항 내용이 없습니다.":rs.getString("건의사항").replace(".", ".\r\n\t\t\t")
+							  ,rs.getNString("건의사항")
 							  ,rs.getNString("답변")==null?"답변이 아직 등록되지 않았습니다.":rs.getString("답변").replace(".", ".\r\n\t\t\t")
 							  ,rs.getNString("전화번호")};
 				row.add(str);

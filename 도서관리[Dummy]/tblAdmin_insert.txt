@@ -1,6 +1,0 @@
-insert into tblAdmin(admin_id, admin_pw) values (admin1, Doyoon);
-insert into tblAdmin(admin_id, admin_pw) values (admin2, Jaesung);
-insert into tblAdmin(admin_id, admin_pw) values (admin3, Seunghwan);
-insert into tblAdmin(admin_id, admin_pw) values (admin4, Sujin);
-insert into tblAdmin(admin_id, admin_pw) values (admin5, Sojin);
-insert into tblAdmin(admin_id, admin_pw) values (admin6, Yerim);
